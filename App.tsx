@@ -11,6 +11,7 @@ import {Card} from './components/Card';
 import {configureStore} from '@reduxjs/toolkit';
 import rootReducer, {rootSaga} from './store';
 import createSagaMiddleware from '@redux-saga/core';
+import TopNavigation from './navigation/navigator';
 
 export enum RootScreens {
   Home = 'Home',
@@ -43,6 +44,7 @@ const App = () => {
       <SafeAreaProvider style={backgroundStyle}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
         <NavigationContainer>
+          {/* <TopNavigation> */}
           <RootStack.Navigator
             initialRouteName="Home"
             screenOptions={({navigation}) => ({
@@ -58,6 +60,7 @@ const App = () => {
             />
             <RootStack.Screen name="Card" component={Card} />
           </RootStack.Navigator>
+          {/* </TopNavigation> */}
         </NavigationContainer>
       </SafeAreaProvider>
     </Provider>

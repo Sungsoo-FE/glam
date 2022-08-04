@@ -2,14 +2,10 @@ import React, {useEffect} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParams} from '../App';
-import {Card} from '../components/Card';
-import env from '../env';
 import {useDispatch, useSelector} from 'react-redux';
 import {ReducerType} from '../store';
-import {Introduction} from '../modules/introduction/introduction';
-import {introductionActions} from '../modules/introduction/introductionSlice';
-import {additionalActions} from '../modules/introduction/additional/additionalSlice';
 import {profileActions} from '../modules/profile/profileSlice';
+import {Profile} from '../modules/profile/profile';
 
 type homeScreenNavigationProp = StackNavigationProp<RootStackParams>;
 
@@ -17,23 +13,18 @@ interface Props {
   navigation: homeScreenNavigationProp;
 }
 
-export function Home({navigation}: Props) {
+export function Profile({navigation}: Props) {
   const dispatch = useDispatch();
-  const introductions = useSelector<ReducerType, Introduction[] | null>(
-    state => state.introductionReducer.data,
+  const profiles = useSelector<ReducerType, Profile[] | null>(
+    state => state.profileReducer.data,
   );
+  console.log(profiles);
 
   useEffect(() => {
-    dispatch(introductionActions.getIntroductions());
-    dispatch(additionalActions.getAdditional());
     dispatch(profileActions.getProfile());
   }, []);
 
-  return (
-    <View style={s.homeContainer}>
-      {introductions && <Card introductions={introductions} />}
-    </View>
-  );
+  return <View style={s.homeContainer}></View>;
 }
 
 const s = StyleSheet.create({

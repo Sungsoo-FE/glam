@@ -1,24 +1,32 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {Home} from '../screens/Home';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Tab = createMaterialTopTabNavigator();
-const BottomTab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
 
-function Tabs() {
+function TopNavigation() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="First" component={Home} />
+    <Tab.Navigator initialRouteName="Home">
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Test" component={TestScreen} />
     </Tab.Navigator>
   );
 }
 
-export default function AppNavigator() {
-  return (
-    <NavigationContainer>
-      <Tabs />
-    </NavigationContainer>
-  );
+function TestScreen() {
+  return <Text>test</Text>;
 }
+
+export default TopNavigation;
+
+// export default function AppNavigator() {
+//   return (
+//     <NavigationContainer>
+//       <Tabs />
+//     </NavigationContainer>
+//   );
+// }

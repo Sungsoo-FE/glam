@@ -6,7 +6,7 @@ import {getProfile as getData} from '../../api/profileApi';
 function* getProfile() {
   try {
     const response: AxiosResponse = yield call(getData);
-    yield put(profileActions.getProfileSuccess(response.data));
+    yield put(profileActions.getProfileSuccess(response));
   } catch (err) {
     yield put(profileActions.getProfileError(err));
   }
