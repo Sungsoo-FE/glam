@@ -4,9 +4,9 @@ export interface Introduction {
   distance: Number;
   height: Number;
   id: Number;
-  introduction: String;
+  introduction: String | null;
   job: String;
   location: String;
   name: String;
-  picture: String[];
+  pictures: String[];
 }

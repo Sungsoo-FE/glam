@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {AxiosError} from 'axios';
-import {Introduction} from '../introduction';
+import {Introduction} from './introduction';
 
 interface IntroductionState {
   loading: boolean;
@@ -22,7 +22,6 @@ const introductionSlice = createSlice({
       state.loading = true;
     },
     getIntroductionsSuccess: (state, {payload}) => {
-      console.log(payload);
       state.data = payload;
       state.loading = false;
     },
