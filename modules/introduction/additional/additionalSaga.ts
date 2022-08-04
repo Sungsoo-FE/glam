@@ -16,6 +16,6 @@ function* watchGetAdditional() {
   yield takeLatest(additionalActions.getAdditional, getAdditional);
 }
 
-export default function* getIntroductionsSaga() {
+export default function* getAdditionalSaga() {
   yield all([fork(watchGetAdditional)]);
 }

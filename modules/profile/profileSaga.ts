@@ -12,10 +12,10 @@ function* getProfile() {
   }
 }
 
-function* watchGetIntroductions() {
+function* watchGetProfile() {
   yield takeLatest(profileActions.getProfile, getProfile);
 }
 
-export default function* getIntroductionsSaga() {
-  yield all([fork(watchGetIntroductions)]);
+export default function* getProfileSaga() {
+  yield all([fork(watchGetProfile)]);
 }

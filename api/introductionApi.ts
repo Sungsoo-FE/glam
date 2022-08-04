@@ -4,7 +4,8 @@ import env from '../env';
 const baseUrl = env.baseUrl + '/introduction';
 
 export async function getIntroductions() {
-  const response = await axios.get(baseUrl + '/');
+  const response = await axios.get(baseUrl);
+  console.log(response.data);
   return response.data;
 }
 
