@@ -78,7 +78,8 @@ export function Card({introductions}: Introductions) {
                       <FastImage
                         source={Images.delete}
                         style={s.xIcon}
-                        resizeMode={FastImage.resizeMode.contain}></FastImage>
+                        resizeMode={FastImage.resizeMode.contain}
+                      />
                     </TouchableOpacity>
                     <TouchableOpacity style={s.likeButton}>
                       <Text style={{color: 'white', fontWeight: '500'}}>

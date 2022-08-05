@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ReducerType} from '../store';
 import {profileActions} from '../modules/profile/profileSlice';
 import {Profile} from '../modules/profile/profile';
+import GridImageView from 'react-native-grid-image-viewer';
 
 type homeScreenNavigationProp = StackNavigationProp<RootStackParams>;
 
@@ -18,13 +19,16 @@ export function Profile({navigation}: Props) {
   const profiles = useSelector<ReducerType, Profile[] | null>(
     state => state.profileReducer.data,
   );
-  console.log(profiles);
 
   useEffect(() => {
     dispatch(profileActions.getProfile());
   }, []);
 
-  return <View style={s.homeContainer}></View>;
+  return (
+    <View style={s.homeContainer}>
+      <GridImageView />
+    </View>
+  );
 }
 
 const s = StyleSheet.create({

@@ -2,25 +2,33 @@ import React from 'react';
 import {StatusBar, StyleSheet, useColorScheme} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Home} from './screens/Home';
+import {Near} from './screens/Near';
+import {Live} from './screens/Live';
 import {Provider} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import HeaderBack from './components/HeaderBack';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {Card} from './components/Card';
 import {configureStore} from '@reduxjs/toolkit';
 import rootReducer, {rootSaga} from './store';
 import createSagaMiddleware from '@redux-saga/core';
-import TopNavigation from './navigation/navigator';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import TabBar from './navigation/tabBar';
 
 export enum RootScreens {
   Home = 'Home',
   Card = 'Card',
+  Nav = 'Nav',
+  Near = 'Near',
+  Live = 'Live',
 }
 
 export type RootStackParams = {
   Home: undefined;
   Card: undefined;
+  Nav: undefined;
+  Near: undefined;
+  Live: undefined;
 };
 const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
@@ -29,6 +37,8 @@ const store = configureStore({
 });
 
 const RootStack = createStackNavigator<RootStackParams>();
+
+const Tap = createMaterialTopTabNavigator<RootStackParams>();
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -43,24 +53,25 @@ const App = () => {
     <Provider store={store}>
       <SafeAreaProvider style={backgroundStyle}>
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <NavigationContainer>
-          {/* <TopNavigation> */}
+        <NavigationContainer independent={true}>
           <RootStack.Navigator
-            initialRouteName="Home"
+            initialRouteName="Nav"
             screenOptions={({navigation}) => ({
+              headerStatusBarHeight: 0,
               title: '',
               gestureEnabled: true,
               headerBackTitleVisible: false,
               headerLeft: () => <HeaderBack navigation={navigation} />,
             })}>
+            <RootStack.Screen name="Nav" component={TabBar} />
             <RootStack.Screen
               name="Home"
               component={Home}
               options={{headerLeft: () => null}}
             />
-            <RootStack.Screen name="Card" component={Card} />
+            <RootStack.Screen name="Near" component={Near} />
+            <RootStack.Screen name="Live" component={Live} />
           </RootStack.Navigator>
-          {/* </TopNavigation> */}
         </NavigationContainer>
       </SafeAreaProvider>
     </Provider>
