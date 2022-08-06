@@ -16,6 +16,7 @@ import Images from '../assets/images';
 import {useDispatch, useSelector} from 'react-redux';
 import {ReducerType} from '../store';
 import {additionalActions} from '../modules/introduction/additional/additionalSlice';
+import {Custom, CustomCard} from './Custom';
 
 interface Introductions {
   introductions: Introduction[] | null;
@@ -26,7 +27,9 @@ export function Card({introductions, additionalData}: Introductions) {
   const baseUrl = env.baseUrl;
   const dispatch = useDispatch();
   const scrollViewRef = useRef<any>();
+  const [additionalList, setAdditionalList] = useState<any>([]);
   const [itemList, setItemList] = useState<any>([]);
+  const [hasCustom, setHasCustom] = useState<boolean>(false);
 
   const checkEnd = ({layoutMeasurement, contentOffset, contentSize}: any) => {
     const paddingToBottom = 20;
@@ -38,9 +41,9 @@ export function Card({introductions, additionalData}: Introductions) {
 
   const fetchAdditionalData = () => {
     if (additionalData) {
-      var addedList = [...itemList, ...additionalData];
+      var addedList = [...additionalData];
       var uniqueList = [...new Set(addedList)];
-      setItemList(uniqueList);
+      setAdditionalList(uniqueList);
     }
   };
 
@@ -49,32 +52,44 @@ export function Card({introductions, additionalData}: Introductions) {
     setItemList(introductions);
   }, []);
 
-  const deleteItem = (index: Number) => {
-    var deletedList = itemList.filter((e: object, eIndex: number) => {
-      return eIndex !== index;
-    });
+  useEffect(() => {
+    console.log(hasCustom);
+  }, [hasCustom]);
 
-    setItemList(deletedList);
+  const deleteItem = (index: number, isNew: boolean) => {
+    var deletedList;
+    if (isNew) {
+      deletedList = additionalList.filter((e: object, eIndex: number) => {
+        return eIndex !== index;
+      });
+      setAdditionalList(deletedList);
+    } else {
+      deletedList = itemList.filter((e: object, eIndex: number) => {
+        return eIndex !== index;
+      });
+      setItemList(deletedList);
+    }
   };
 
   return (
-    <View
-      style={{
-        flexGrow: 1,
-        alignSelf: 'center',
-      }}>
+    <View>
       <ScrollView
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onScroll={(e): any => {
+          if (hasCustom) {
+            setHasCustom(true);
+          }
           if (checkEnd(e.nativeEvent)) {
             fetchAdditionalData();
           }
         }}>
+        {hasCustom && <CustomCard />}
         {itemList?.map((item: any, index: number): any => {
           return (
             <ImageBackground
+              borderRadius={8}
               key={item.id.toString()}
               source={{uri: baseUrl + item.pictures[0]}}
               resizeMode="cover"
@@ -82,7 +97,7 @@ export function Card({introductions, additionalData}: Introductions) {
               <></>
               <View>
                 <View style={s.cardContents}>
-                  <View style={s.recommend}>
+                  <View>
                     <Text style={s.recommendText}>오늘의 추천</Text>
                   </View>
                   <Text
@@ -117,7 +132,7 @@ export function Card({introductions, additionalData}: Introductions) {
                   <View style={s.buttonWrapper}>
                     <TouchableOpacity
                       style={s.closeButton}
-                      onPress={() => deleteItem(index)}>
+                      onPress={() => deleteItem(index, false)}>
                       <FastImage
                         source={Images.delete}
                         style={s.xIcon}
@@ -126,7 +141,74 @@ export function Card({introductions, additionalData}: Introductions) {
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={s.likeButton}
-                      onPress={() => deleteItem(index)}>
+                      onPress={() => deleteItem(index, false)}>
+                      <Text style={{color: 'white', fontWeight: '500'}}>
+                        좋아요
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </ImageBackground>
+          );
+        })}
+        <Custom setHasCustom={setHasCustom} hasCustom={hasCustom} />
+        {additionalList?.map((item: any, index: number): any => {
+          return (
+            <ImageBackground
+              key={item.id.toString()}
+              source={{uri: baseUrl + item.pictures[0]}}
+              resizeMode="cover"
+              borderRadius={8}
+              style={s.cardContainer}>
+              <></>
+              <View>
+                <View style={s.cardContents}>
+                  <View>
+                    <Text style={s.recommendText}>오늘의 추천</Text>
+                  </View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      paddingTop: 12,
+                      fontSize: 24,
+                      fontWeight: '600',
+                    }}>
+                    {item.name}, {item.age}
+                  </Text>
+                  <View style={{paddingTop: 8}}>
+                    {item.introduction ? (
+                      <Text style={{color: 'white'}}>{item.introduction}</Text>
+                    ) : (
+                      <View>
+                        <Text style={{color: 'white', fontSize: 16}}>
+                          {item.job}
+                        </Text>
+                        <Text
+                          style={{
+                            color: 'white',
+                            opacity: 0.6,
+                            paddingTop: 4,
+                            fontSize: 16,
+                          }}>
+                          {item.height.toString() + 'cm'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                  <View style={s.buttonWrapper}>
+                    <TouchableOpacity
+                      style={s.closeButton}
+                      onPress={() => deleteItem(index, true)}>
+                      <FastImage
+                        source={Images.delete}
+                        style={s.xIcon}
+                        resizeMode={FastImage.resizeMode.contain}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={s.likeButton}
+                      onPress={() => deleteItem(index, true)}>
                       <Text style={{color: 'white', fontWeight: '500'}}>
                         좋아요
                       </Text>
@@ -143,23 +225,19 @@ export function Card({introductions, additionalData}: Introductions) {
 }
 
 const s = StyleSheet.create({
-  cardScreen: {
-    // alignItems: 'center',
-  },
   cardContainer: {
     justifyContent: 'flex-end',
     marginBottom: 24,
     backgroundColor: 'black',
     opacity: 0.5,
-    // aspectRatio: 1 / 1.4,
+    aspectRatio: 1 / 1.4,
+    borderRadius: 8,
     padding: 16,
+    marginLeft: 32,
+    marginTop: 16,
   },
   cardContents: {
     display: 'flex',
-  },
-  recommend: {
-    // backgroundColor: 'white',
-    // opacity: 0.25,
   },
   recommendText: {
     fontSize: 14,

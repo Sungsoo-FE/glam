@@ -6,11 +6,14 @@ import getProfileSaga from './modules/profile/profileSaga';
 import {introductionReducer} from './modules/introduction/introductionSlice';
 import {additionalReducer} from './modules/introduction/additional/additionalSlice';
 import {profileReducer} from './modules/profile/profileSlice';
+import {customReducer} from './modules/introduction/custom/customSlice';
+import getCustomSaga from './modules/introduction/custom/customSaga';
 
 const rootReducer = combineReducers({
   introductionReducer,
   additionalReducer,
   profileReducer,
+  customReducer,
 });
 
 export function* rootSaga() {
@@ -18,6 +21,7 @@ export function* rootSaga() {
     call(getIntroductionsSaga),
     call(getAdditionalSaga),
     call(getProfileSaga),
+    call(getCustomSaga),
   ]);
 }
 

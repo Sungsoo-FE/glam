@@ -1,12 +1,12 @@
 export interface Introduction {
-  age: String;
-  company: String;
-  distance: Number;
-  height: Number;
-  id: Number;
-  introduction: String | null;
-  job: String;
-  location: String;
-  name: String;
-  pictures: String[];
+  age: string;
+  company: string;
+  distance: number;
+  height: number;
+  id: number;
+  introduction: string | null;
+  job: string;
+  location: string;
+  name: string;
+  pictures: string[];
 }

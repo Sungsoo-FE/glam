@@ -1,31 +1,35 @@
-interface Keys {
-  key: String;
-  name: String;
+export interface Keys {
+  key: string;
+  name: string;
 }
 
 export interface Profile {
-  data: {
-    birthday: String;
-    body_type: String;
-    company: String;
-    education: String | null;
-    gender: String;
-    height: Number;
-    id: Number;
-    introduction: String | null;
-    job: String | null;
-    location: String;
-    name: String;
-    pictures: String[];
-    school: String | null;
+  data: Data;
+  meta: Meta;
+}
+
+export interface Meta {
+  body_types: Keys[];
+  educations: Keys[];
+  genders: Keys[];
+  height_range: {
+    max: number;
+    min: number;
   };
-  meta: {
-    body_type: Keys[];
-    education: Keys[];
-    genders: Keys[];
-    height_range: {
-      max: Number;
-      min: Number;
-    };
-  };
+}
+
+export interface Data {
+  birthday: string;
+  body_type: string | null;
+  company: string | null;
+  education: string | null;
+  gender: string;
+  height: number | null;
+  id: number;
+  introduction: any;
+  job: string | null;
+  location: string;
+  name: string;
+  pictures: string[];
+  school: string | null;
 }

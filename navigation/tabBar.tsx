@@ -10,9 +10,11 @@ import TopNavigation from './navigator';
 import BottomNavigation from './bottomNavigation';
 import {Station} from '../screens/Station';
 import {Connection} from '../screens/Connection';
-import {More} from '../screens/More';
+import {Profile} from '../screens/Profile';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const Tab = createMaterialTopTabNavigator();
+const TabStack = createStackNavigator();
 
 function TabBar() {
   return (
@@ -53,6 +55,13 @@ function TabBar() {
             tabBarLabel: '라이브',
           }}
         />
+        <TabStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Profile"
+          component={Profile}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
@@ -86,7 +95,15 @@ function BottomTabBar() {
         <Tab.Screen name="Live" component={Live} />
         <Tab.Screen name="Station" component={Station} />
         <Tab.Screen name="Connection" component={Connection} />
-        <Tab.Screen name="More" component={More} />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarStyle: {
+              display: 'none',
+            },
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -10,6 +10,7 @@ import {Introduction} from '../modules/introduction/introduction';
 import {introductionActions} from '../modules/introduction/introductionSlice';
 import {additionalActions} from '../modules/introduction/additional/additionalSlice';
 import {profileActions} from '../modules/profile/profileSlice';
+import {customActions} from '../modules/introduction/custom/customSlice';
 
 type homeScreenNavigationProp = StackNavigationProp<RootStackParams>;
 
@@ -30,6 +31,7 @@ export function Home({navigation}: Props) {
     dispatch(introductionActions.getIntroductions());
     dispatch(additionalActions.getAdditional());
     dispatch(profileActions.getProfile());
+    // dispatch(customActions.getCustom());
   }, []);
 
   return (

@@ -1,18 +1,15 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabBarProps,
-} from '@react-navigation/material-top-tabs';
+import {MaterialTopTabBarProps} from '@react-navigation/material-top-tabs';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import glamColors from '../public/glamColors';
 import FastImage from 'react-native-fast-image';
 import Images from '../assets/images';
 
 type Route = {
-  key: String | undefined;
-  component: String;
-  name: String;
+  key: string | undefined;
+  component: string;
+  name: string;
   params?: object | undefined;
 };
 
@@ -34,13 +31,11 @@ const routes: Route[] = [
   },
 ];
 
-const Tab = createMaterialTopTabNavigator();
-
 function TopNavigation({state, navigation}: MaterialTopTabBarProps) {
   return (
     <View style={s.TabWrapper}>
       <View style={s.TabContainer}>
-        {routes.map((route: Route, index: Number) => {
+        {routes.map((route: Route, index: number) => {
           const isFocused = state.index === index;
 
           const onPress = () => {
@@ -72,7 +67,10 @@ function TopNavigation({state, navigation}: MaterialTopTabBarProps) {
           );
         })}
       </View>
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Profile');
+        }}>
         <FastImage source={Images.setting} style={s.setting} />
       </TouchableOpacity>
     </View>

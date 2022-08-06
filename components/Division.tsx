@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import glamColors from '../public/glamColors';
 
 interface heightProps {
   height: number;
@@ -19,6 +20,7 @@ export function Division(props: heightProps) {
 
 const s = StyleSheet.create({
   division: {
-    backgroundColor: '#F4F6F8',
+    width: '100%',
+    backgroundColor: glamColors.Gray1,
   },
 });

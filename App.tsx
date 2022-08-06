@@ -14,6 +14,7 @@ import rootReducer, {rootSaga} from './store';
 import createSagaMiddleware from '@redux-saga/core';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import TabBar from './navigation/tabBar';
+import {Profile} from './screens/Profile';
 
 export enum RootScreens {
   Home = 'Home',
@@ -21,6 +22,7 @@ export enum RootScreens {
   Nav = 'Nav',
   Near = 'Near',
   Live = 'Live',
+  Profile = 'Profile',
 }
 
 export type RootStackParams = {
@@ -29,6 +31,7 @@ export type RootStackParams = {
   Nav: undefined;
   Near: undefined;
   Live: undefined;
+  Profile: undefined;
 };
 const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
@@ -37,8 +40,6 @@ const store = configureStore({
 });
 
 const RootStack = createStackNavigator<RootStackParams>();
-
-const Tap = createMaterialTopTabNavigator<RootStackParams>();
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -71,6 +72,7 @@ const App = () => {
             />
             <RootStack.Screen name="Near" component={Near} />
             <RootStack.Screen name="Live" component={Live} />
+            <RootStack.Screen name="Profile" component={Profile} />
           </RootStack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

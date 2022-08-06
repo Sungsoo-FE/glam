@@ -8,6 +8,14 @@ const Images = {
   live: require('./live.png'),
   more: require('./more.png'),
   station: require('./station.png'),
+  back: require('./back.png'),
+  lock: require('./lock.png'),
+  person: require('./person.png'),
+  dia: require('./dia.png'),
+  glamour: require('./glamour.png'),
+  today: require('./today.png'),
+  withpet: require('./withpet.png'),
+  hot: require('./hot.png'),
 };
 
 export default Images;

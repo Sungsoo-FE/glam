@@ -10,10 +10,10 @@ import FastImage from 'react-native-fast-image';
 import Images from '../assets/images';
 
 type Route = {
-  key: String | undefined;
-  component: String;
-  url: String;
-  name: String;
+  key: string | undefined;
+  component: string;
+  url: string;
+  name: string;
   params?: object | undefined;
 };
 
@@ -43,9 +43,9 @@ const routes: Route[] = [
     name: '커넥션',
   },
   {
-    key: 'More',
+    key: 'Profile',
     url: Images.more,
-    component: 'More',
+    component: 'Profile',
     name: '프로필',
   },
 ];
@@ -55,7 +55,7 @@ const Tab = createMaterialTopTabNavigator();
 function BottomTabBar({state, navigation}: MaterialTopTabBarProps) {
   return (
     <View style={s.TabContainer}>
-      {routes.map((route: Route, index: Number) => {
+      {routes.map((route: Route, index: number) => {
         const isFocused = state.index === index;
 
         const onPress = () => {
@@ -75,7 +75,6 @@ function BottomTabBar({state, navigation}: MaterialTopTabBarProps) {
             {route.url && (
               <Image
                 source={route.url.toString()}
-                // source={route.url.toString()}
                 resizeMode={FastImage.resizeMode.contain}
                 style={[s.TabImage, isFocused ? s.focusedImage : null]}
               />

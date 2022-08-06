@@ -4,7 +4,7 @@ import {Profile} from './profile';
 
 interface ProfileState {
   loading: boolean;
-  data: Profile[] | null;
+  data: Profile | null;
   error: AxiosError | null;
 }
 
