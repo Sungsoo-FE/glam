@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {Introduction} from '../modules/introduction/introduction';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -12,13 +13,49 @@ import env from '../env';
 import glamColors from '../public/glamColors';
 import FastImage from 'react-native-fast-image';
 import Images from '../assets/images';
+import {useDispatch, useSelector} from 'react-redux';
+import {ReducerType} from '../store';
+import {additionalActions} from '../modules/introduction/additional/additionalSlice';
 
 interface Introductions {
-  introductions: Introduction[];
+  introductions: Introduction[] | null;
+  additionalData: Introduction[] | null;
 }
 
-export function Card({introductions}: Introductions) {
+export function Card({introductions, additionalData}: Introductions) {
   const baseUrl = env.baseUrl;
+  const dispatch = useDispatch();
+  const scrollViewRef = useRef<any>();
+  const [itemList, setItemList] = useState<any>([]);
+
+  const checkEnd = ({layoutMeasurement, contentOffset, contentSize}: any) => {
+    const paddingToBottom = 20;
+    return (
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom
+    );
+  };
+
+  const fetchAdditionalData = () => {
+    if (additionalData) {
+      var addedList = [...itemList, ...additionalData];
+      var uniqueList = [...new Set(addedList)];
+      setItemList(uniqueList);
+    }
+  };
+
+  useEffect(() => {
+    dispatch(additionalActions.getAdditional());
+    setItemList(introductions);
+  }, []);
+
+  const deleteItem = (index: Number) => {
+    var deletedList = itemList.filter((e: object, eIndex: number) => {
+      return eIndex !== index;
+    });
+
+    setItemList(deletedList);
+  };
 
   return (
     <View
@@ -27,13 +64,19 @@ export function Card({introductions}: Introductions) {
         alignSelf: 'center',
       }}>
       <ScrollView
+        ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        showsHorizontalScrollIndicator={false}>
-        {introductions?.map(introduction => {
+        showsHorizontalScrollIndicator={false}
+        onScroll={(e): any => {
+          if (checkEnd(e.nativeEvent)) {
+            fetchAdditionalData();
+          }
+        }}>
+        {itemList?.map((item: any, index: number): any => {
           return (
             <ImageBackground
-              key={introduction.id.toString()}
-              source={{uri: baseUrl + introduction.pictures[0]}}
+              key={item.id.toString()}
+              source={{uri: baseUrl + item.pictures[0]}}
               resizeMode="cover"
               style={s.cardContainer}>
               <></>
@@ -49,17 +92,15 @@ export function Card({introductions}: Introductions) {
                       fontSize: 24,
                       fontWeight: '600',
                     }}>
-                    {introduction.name}, {introduction.age}
+                    {item.name}, {item.age}
                   </Text>
                   <View style={{paddingTop: 8}}>
-                    {introduction.introduction ? (
-                      <Text style={{color: 'white'}}>
-                        {introduction.introduction}
-                      </Text>
+                    {item.introduction ? (
+                      <Text style={{color: 'white'}}>{item.introduction}</Text>
                     ) : (
                       <View>
                         <Text style={{color: 'white', fontSize: 16}}>
-                          {introduction.job}
+                          {item.job}
                         </Text>
                         <Text
                           style={{
@@ -68,20 +109,24 @@ export function Card({introductions}: Introductions) {
                             paddingTop: 4,
                             fontSize: 16,
                           }}>
-                          {introduction.height.toString() + 'cm'}
+                          {item.height.toString() + 'cm'}
                         </Text>
                       </View>
                     )}
                   </View>
                   <View style={s.buttonWrapper}>
-                    <TouchableOpacity style={s.closeButton}>
+                    <TouchableOpacity
+                      style={s.closeButton}
+                      onPress={() => deleteItem(index)}>
                       <FastImage
                         source={Images.delete}
                         style={s.xIcon}
                         resizeMode={FastImage.resizeMode.contain}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity style={s.likeButton}>
+                    <TouchableOpacity
+                      style={s.likeButton}
+                      onPress={() => deleteItem(index)}>
                       <Text style={{color: 'white', fontWeight: '500'}}>
                         좋아요
                       </Text>
@@ -106,7 +151,7 @@ const s = StyleSheet.create({
     marginBottom: 24,
     backgroundColor: 'black',
     opacity: 0.5,
-    aspectRatio: 1 / 1.4,
+    // aspectRatio: 1 / 1.4,
     padding: 16,
   },
   cardContents: {

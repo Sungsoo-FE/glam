@@ -22,6 +22,9 @@ export function Home({navigation}: Props) {
   const introductions = useSelector<ReducerType, Introduction[] | null>(
     state => state.introductionReducer.data,
   );
+  const additionalData = useSelector<ReducerType, Introduction[] | null>(
+    state => state.additionalReducer.data,
+  );
 
   useEffect(() => {
     dispatch(introductionActions.getIntroductions());
@@ -31,7 +34,9 @@ export function Home({navigation}: Props) {
 
   return (
     <View style={s.homeContainer}>
-      {introductions && <Card introductions={introductions} />}
+      {introductions && (
+        <Card introductions={introductions} additionalData={additionalData} />
+      )}
     </View>
   );
 }
