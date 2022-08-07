@@ -61,5 +61,4 @@ axios API 비동기 호출을 위한 라이브러리
 
 ![glam-profile4](https://user-images.githubusercontent.com/43291256/183294713-1d4af906-65d9-4422-87e6-f4f511c6aea1.png)
 
-![glam-profile5](https://user-images.githubusercontent.com/43291256/
-183294714-4671f576-1565-4373-9cf7-7d14eaacea36.png)
+![glam-profile5](https://user-images.githubusercontent.com/43291256/183294832-db91dcf2-f1fc-4957-a75b-7ed37ca1263f.png)
