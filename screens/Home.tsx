@@ -31,7 +31,6 @@ export function Home({navigation}: Props) {
     dispatch(introductionActions.getIntroductions());
     dispatch(additionalActions.getAdditional());
     dispatch(profileActions.getProfile());
-    // dispatch(customActions.getCustom());
   }, []);
 
   return (

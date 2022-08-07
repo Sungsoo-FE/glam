@@ -15,18 +15,26 @@ interface ProfileValue {
   isDialog?: boolean;
   placeholder?: string;
   changeValue?: (name: string, value: any) => void;
-  showModal?: boolean;
-  setShowModal?: (showModal: boolean) => void;
-  meta?: Keys[];
+  showModal?: boolean[];
+  setShowModal?: (showModal: boolean[]) => void;
+  metaData?: Keys[];
+  setMetaData?: (metaData: Keys[]) => void;
+  heightRange?: number[];
+  setModalName?: (name: string | null) => void;
+  modalName?: string;
+  meta?: Meta;
 }
 
 interface ModalProps {
-  showModal: boolean;
-  setShowModal: (showModal: boolean) => void;
+  showModal: boolean[];
+  setShowModal: (showModal: boolean[]) => void;
   changeValue?: (name: string, value: any) => void;
   name: string;
-  meta: Keys[];
-  value: string;
+  value: string | number;
+  heightRange?: number[];
+  setModalName?: (name: string | null) => void;
+  modalName?: string;
+  metaData?: Keys[];
 }
 
 export function ProfileTable({data, meta}: Profile) {
@@ -37,7 +45,10 @@ export function ProfileTable({data, meta}: Profile) {
   const [job, setJob] = useState<string | null>(null);
   const [education, setEducation] = useState<string | null>(null);
   const [school, setSchool] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean[]>([false, false, false]);
+  const [heightRange, setHeightRange] = useState<number[]>([]);
+  const [modalName, setModalName] = useState<string | null>(null);
+  const [metaData, setMetaData] = useState<Keys[]>([]);
 
   useEffect(() => {
     if (data) {
@@ -53,8 +64,19 @@ export function ProfileTable({data, meta}: Profile) {
       setJob(data.job);
       setEducation(data.education);
       setSchool(data.school);
+      generateRange(meta.height_range.min, meta.height_range.max);
     }
   }, [data]);
+
+  function generateRange(start: number, end: number) {
+    var length = end - start;
+    var rangeList = new Array<number>(length);
+    for (var i = 0; i < length; i++) {
+      rangeList[i] = start + i + 1;
+    }
+
+    setHeightRange(rangeList);
+  }
 
   function changeValue(name: string, value: any) {
     if (value === '') {
@@ -65,11 +87,6 @@ export function ProfileTable({data, meta}: Profile) {
         setIntroduction(value);
         break;
       case '키':
-        // var heightName = meta.educations.filter(e => {
-        //   if (e.key === value) {
-        //     return e.name;
-        //   }
-        // });
         setHeight(value);
         break;
       case '체형':
@@ -98,7 +115,7 @@ export function ProfileTable({data, meta}: Profile) {
         setSchool(value);
         break;
     }
-    setShowModal(false);
+    setShowModal([false, false, false]);
   }
 
   return (
@@ -121,16 +138,19 @@ export function ProfileTable({data, meta}: Profile) {
         placeholder={'회원님의 매력을 간단하게 소개해주세요'}
       />
       <View style={s.division} />
-      {/* <ProfileRow
+      <ProfileRow
         name={'키'}
         value={height}
         isChangeable={true}
         isDialog={true}
         changeValue={changeValue}
         setShowModal={setShowModal}
+        setModalName={setModalName}
+        modalName={modalName!}
         showModal={showModal}
         placeholder={'선택해주세요'}
-      /> */}
+        heightRange={heightRange}
+      />
       <ProfileRow
         name={'체형'}
         value={bodyType}
@@ -139,8 +159,13 @@ export function ProfileTable({data, meta}: Profile) {
         changeValue={changeValue}
         setShowModal={setShowModal}
         showModal={showModal}
+        setModalName={setModalName}
+        modalName={modalName!}
         placeholder={'선택해주세요'}
-        meta={meta?.body_types}
+        setMetaData={setMetaData}
+        metaData={metaData}
+        meta={meta}
+        heightRange={heightRange}
       />
       <View style={s.division} />
       <ProfileRow
@@ -165,8 +190,13 @@ export function ProfileTable({data, meta}: Profile) {
         changeValue={changeValue}
         setShowModal={setShowModal}
         showModal={showModal}
+        setModalName={setModalName}
+        modalName={modalName!}
         placeholder={'선택해주세요'}
-        meta={meta?.educations}
+        setMetaData={setMetaData}
+        metaData={metaData}
+        meta={meta}
+        heightRange={heightRange}
       />
       <ProfileRow
         name={'학교'}
@@ -190,12 +220,20 @@ function ProfileRow({
   changeValue,
   showModal,
   setShowModal,
+  heightRange,
+  setModalName,
+  modalName,
+  metaData,
   meta,
+  setMetaData,
 }: ProfileValue) {
   return (
     <View style={[s.tableWrapper, isColumn ? s.columnWrapper : s.rowWrapper]}>
       <Text
-        style={[s.nameStyle, !isColumn ? {alignSelf: 'center'} : {height: 30}]}>
+        style={[
+          s.nameStyle,
+          !isColumn ? {alignSelf: 'center'} : {height: 30, marginTop: 8},
+        ]}>
         {name}
       </Text>
       {!isChangeable ? (
@@ -227,22 +265,45 @@ function ProfileRow({
       ) : isDialog ? (
         <TouchableOpacity
           style={s.valueStyle}
-          onPress={() => setShowModal!(!showModal)}>
+          onPress={() => {
+            switch (name) {
+              case '키':
+                setModalName!('키');
+                setShowModal!([true, false, false]);
+                break;
+              case '체형':
+                setMetaData!(meta?.body_types!);
+                setModalName!('체형');
+                setShowModal!([false, true, false]);
+                break;
+              case '학력':
+                setMetaData!(meta?.educations!);
+                setModalName!('학력');
+                setShowModal!([false, false, true]);
+                break;
+              default:
+                setModalName!(null);
+                setShowModal!([false, false, false]);
+                break;
+            }
+          }}>
           <Text style={{color: glamColors.Blue}}>{value ?? placeholder}</Text>
           {showModal && (
             <SelectDialog
               showModal={showModal!}
               setShowModal={setShowModal!}
-              meta={meta!}
               name={name}
               value={value}
               changeValue={changeValue!}
+              heightRange={heightRange!}
+              modalName={modalName}
+              metaData={metaData}
             />
           )}
         </TouchableOpacity>
       ) : (
         <TextInput
-          style={s.valueStyle}
+          style={[s.valueStyle, {width: '100%'}]}
           value={value}
           onChangeText={value => changeValue!(name, value)}
           placeholder={value ?? placeholder}
@@ -271,22 +332,24 @@ function SelectDialog({
   showModal,
   setShowModal,
   name,
-  meta,
   value,
   changeValue,
+  heightRange,
+  modalName,
+  metaData,
 }: ModalProps) {
   return (
     <Modal
       transparent={true}
-      visible={showModal}
+      visible={showModal.includes(true)}
       onRequestClose={() => {
-        setShowModal(false);
+        setShowModal([false, false, false]);
       }}>
-      <TouchableOpacity onPress={() => setShowModal(false)}>
+      <TouchableOpacity onPress={() => setShowModal([false, false, false])}>
         <View style={s.selectModal}>
           <View style={s.modalContent}>
             <View style={s.modalTitle}>
-              <Text>{name}</Text>
+              <Text>{modalName}</Text>
             </View>
             <ScrollView
               style={{width: '100%'}}
@@ -295,21 +358,58 @@ function SelectDialog({
                 alignItems: 'center',
                 paddingLeft: 16,
               }}>
-              {meta?.map((e: any, index: number): any => {
-                return (
-                  <TouchableOpacity
-                    style={s.modalValue}
-                    onPress={() => changeValue!(name, e.key)}>
-                    <Text
-                      style={[
-                        s.modalText,
-                        value === e.name && {color: glamColors.Blue},
-                      ]}>
-                      {e.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
+              {modalName === '키' &&
+                heightRange?.map(e => {
+                  return (
+                    <TouchableOpacity
+                      key={e}
+                      style={s.modalValue}
+                      onPress={() => changeValue!(modalName, e)}>
+                      <Text
+                        style={[
+                          s.modalText,
+                          value === e && {color: glamColors.Blue},
+                        ]}>
+                        {e}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              {modalName === '체형' &&
+                metaData?.map((e: any, index: number): any => {
+                  return (
+                    <TouchableOpacity
+                      key={e.key}
+                      style={s.modalValue}
+                      onPress={() => changeValue!(modalName, e.key)}>
+                      <Text
+                        style={[
+                          s.modalText,
+                          value === e.name && {color: glamColors.Blue},
+                        ]}>
+                        {e.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+
+              {modalName === '학력' &&
+                metaData?.map((e: any, index: number): any => {
+                  return (
+                    <TouchableOpacity
+                      key={e.key}
+                      style={s.modalValue}
+                      onPress={() => changeValue!(modalName, e.key)}>
+                      <Text
+                        style={[
+                          s.modalText,
+                          value === e.name && {color: glamColors.Blue},
+                        ]}>
+                        {e.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
             </ScrollView>
           </View>
         </View>
@@ -320,10 +420,11 @@ function SelectDialog({
 
 const s = StyleSheet.create({
   containerWrapper: {
-    padding: 16,
+    width: '100%',
   },
   tableWrapper: {
     width: '100%',
+    paddingLeft: 16,
   },
   rowWrapper: {
     flexDirection: 'row',
@@ -349,9 +450,7 @@ const s = StyleSheet.create({
   division: {
     width: '100%',
     height: 1,
-    color: glamColors.Gray2,
-    marginTop: 8,
-    marginBottom: 8,
+    backgroundColor: glamColors.Gray1,
   },
   selectModal: {
     justifyContent: 'center',

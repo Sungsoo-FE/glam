@@ -120,7 +120,6 @@ export function CustomCard() {
     });
     setCustomDataList(deletedList);
   };
-  console.log('custom card in');
 
   return (
     <View>

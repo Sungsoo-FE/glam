@@ -43,7 +43,7 @@ export function Profile({navigation}: Props) {
   useEffect(() => {
     var filledList: any = profile?.data.pictures;
 
-    var nullLength = 6 - filledList.length;
+    var nullLength = 6 - filledList?.length;
 
     var newImageList = [];
     newImageList.push(...filledList);
@@ -89,9 +89,14 @@ export function Profile({navigation}: Props) {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text>다양한 매력을 보여줄 수 있는 사진을 올려주세요. </Text>
+        <Text style={{fontSize: 12, color: glamColors.Gray4}}>
+          다양한 매력을 보여줄 수 있는 사진을 올려주세요.{' '}
+        </Text>
         <TouchableOpacity>
-          <Text>더 알아보기</Text>
+          <Text
+            style={{fontSize: 12, fontWeight: '600', color: glamColors.Gray1}}>
+            더 알아보기
+          </Text>
         </TouchableOpacity>
       </View>
       <Division height={1} />

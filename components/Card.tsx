@@ -52,10 +52,6 @@ export function Card({introductions, additionalData}: Introductions) {
     setItemList(introductions);
   }, []);
 
-  useEffect(() => {
-    console.log(hasCustom);
-  }, [hasCustom]);
-
   const deleteItem = (index: number, isNew: boolean) => {
     var deletedList;
     if (isNew) {
