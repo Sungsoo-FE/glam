@@ -30,6 +30,7 @@ export function Card({introductions, additionalData}: Introductions) {
   const [additionalList, setAdditionalList] = useState<any>([]);
   const [itemList, setItemList] = useState<any>([]);
   const [hasCustom, setHasCustom] = useState<boolean>(false);
+  const [customData, setCustomData] = useState<any>([]);
 
   const checkEnd = ({layoutMeasurement, contentOffset, contentSize}: any) => {
     const paddingToBottom = 20;
@@ -81,7 +82,9 @@ export function Card({introductions, additionalData}: Introductions) {
             fetchAdditionalData();
           }
         }}>
-        {hasCustom && <CustomCard />}
+        {customData && (
+          <CustomCard setCustomData={setCustomData} customData={customData} />
+        )}
         {itemList?.map((item: any, index: number): any => {
           return (
             <ImageBackground
@@ -148,7 +151,11 @@ export function Card({introductions, additionalData}: Introductions) {
             </ImageBackground>
           );
         })}
-        <Custom setHasCustom={setHasCustom} hasCustom={hasCustom} />
+        <Custom
+          setHasCustom={setHasCustom}
+          hasCustom={hasCustom}
+          setCustomData={setCustomData}
+        />
         {additionalList?.map((item: any, index: number): any => {
           return (
             <ImageBackground

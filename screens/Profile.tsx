@@ -41,18 +41,16 @@ export function Profile({navigation}: Props) {
   }, []);
 
   useEffect(() => {
-    var filledList: any = profile?.data.pictures;
-
-    var nullLength = 6 - filledList?.length;
-
-    var newImageList = [];
-    newImageList.push(...filledList);
-
-    for (var i = 0; i < nullLength; i++) {
-      newImageList.push(false);
+    if (profile) {
+      var filledList: any = profile?.data.pictures;
+      var nullLength = 6 - filledList?.length;
+      var newImageList = [];
+      newImageList.push(...filledList);
+      for (var i = 0; i < nullLength; i++) {
+        newImageList.push(false);
+      }
+      setImageList(newImageList);
     }
-
-    setImageList(newImageList);
   }, [profile]);
 
   return (

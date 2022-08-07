@@ -18,9 +18,21 @@ import Images from '../assets/images';
 interface CustomProps {
   setHasCustom: (hasCustom: boolean) => void;
   hasCustom: boolean;
+  setCustomData: (data: any) => void;
 }
 
-export function Custom({setHasCustom, hasCustom}: CustomProps) {
+export function Custom({setHasCustom, hasCustom, setCustomData}: CustomProps) {
+  const dispatch = useDispatch();
+  const customIntroductionData = useSelector<
+    ReducerType,
+    Introduction[] | null
+  >(state => state.customReducer.data);
+
+  useEffect(() => {
+    dispatch(customActions.getCustom());
+    setCustomData(customIntroductionData);
+  }, [hasCustom]);
+
   return (
     <View style={s.homeContainer}>
       <TouchableOpacity onPress={() => setHasCustom(true)}>
@@ -101,29 +113,35 @@ function HotIcon({source}: any) {
   );
 }
 
-export function CustomCard() {
+interface CustomCardProps {
+  setCustomData: (data: Introduction[]) => void;
+  customData: Introduction[] | null;
+}
+
+export function CustomCard({setCustomData, customData}: CustomCardProps) {
   const dispatch = useDispatch();
-  const customData = useSelector<ReducerType, Introduction[] | null>(
-    state => state.customReducer.data,
-  );
+  const customIntroductionData = useSelector<
+    ReducerType,
+    Introduction[] | null
+  >(state => state.customReducer.data);
   const baseUrl = env.baseUrl;
   const [customDataList, setCustomDataList] = useState<any>([]);
 
   useEffect(() => {
     dispatch(customActions.getCustom());
-    setCustomDataList(customData);
+    setCustomDataList(customIntroductionData);
   }, []);
 
   const deleteItem = (index: number, isNew: boolean) => {
     var deletedList = customDataList.filter((e: object, eIndex: number) => {
       return eIndex !== index;
     });
-    setCustomDataList(deletedList);
+    setCustomData(deletedList);
   };
 
   return (
     <View>
-      {customDataList?.map((item: any, index: number): any => {
+      {customData?.map((item: any, index: number): any => {
         return (
           <ImageBackground
             borderRadius={8}
