@@ -332,7 +332,11 @@ function ProfileRow({
         </TouchableOpacity>
       ) : (
         <TextInput
-          style={[s.valueStyle, {width: '100%'}]}
+          style={[
+            s.valueStyle,
+            {width: '100%'},
+            {color: value ? glamColors.Blue : glamColors.Gray2},
+          ]}
           value={value}
           onChangeText={value => changeValue!(name, value)}
           placeholder={value ?? placeholder}
