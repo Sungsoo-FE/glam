@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import {Introduction} from '../modules/introduction/introduction';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -13,8 +12,7 @@ import env from '../env';
 import glamColors from '../public/glamColors';
 import FastImage from 'react-native-fast-image';
 import Images from '../assets/images';
-import {useDispatch, useSelector} from 'react-redux';
-import {ReducerType} from '../store';
+import {useDispatch} from 'react-redux';
 import {additionalActions} from '../modules/introduction/additional/additionalSlice';
 import {Custom, CustomCard} from './Custom';
 

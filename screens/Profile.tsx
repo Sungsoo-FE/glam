@@ -12,7 +12,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ReducerType} from '../store';
 import {profileActions} from '../modules/profile/profileSlice';
 import {Profile as props} from '../modules/profile/profile';
-import {FlatList, ScrollView} from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import env from '../env';
 import Images from '../assets/images';
@@ -29,6 +29,7 @@ interface Props {
 export function Profile({navigation}: Props) {
   const baseUrl = env.baseUrl;
   const [imageList, setImageList] = useState<any>([]);
+  const [secondList, setSecondList] = useState<any>([]);
   const dispatch = useDispatch();
   const profile = useSelector<ReducerType, props | null>(
     state => state.profileReducer.data,
@@ -49,7 +50,10 @@ export function Profile({navigation}: Props) {
       for (var i = 0; i < nullLength; i++) {
         newImageList.push(false);
       }
-      setImageList(newImageList);
+      const first = newImageList.splice(0, 3);
+      const second = newImageList.splice(-3);
+      setImageList(first);
+      setSecondList(second);
     }
   }, [profile]);
 
@@ -63,23 +67,32 @@ export function Profile({navigation}: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-      <FlatList
-        scrollEnabled={false}
-        data={imageList}
-        style={{flex: 1}}
-        contentContainerStyle={s.listWrapper}
-        renderItem={({item, index}) => (
-          <TouchableOpacity>
-            <FastImage
-              source={imageList[index] ? {uri: baseUrl + item} : Images.person}
-              style={{aspectRatio: 1 / 1, width: imageWidth}}
-              resizeMode={FastImage.resizeMode.contain}
-            />
-          </TouchableOpacity>
-        )}
-        numColumns={3}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <View style={[s.listWrapper, {flex: 1}]}>
+        {imageList.map((e: any, index: any) => {
+          return (
+            <TouchableOpacity key={index.toString()}>
+              <FastImage
+                source={imageList[index] ? {uri: baseUrl + e} : Images.person}
+                style={{aspectRatio: 1 / 1, width: imageWidth}}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+      <View style={[s.listWrapper, {flex: 1}]}>
+        {secondList.map((e: any, index: any) => {
+          return (
+            <TouchableOpacity key={index.toString()}>
+              <FastImage
+                source={secondList[index] ? {uri: baseUrl + e} : Images.person}
+                style={{aspectRatio: 1 / 1, width: imageWidth}}
+                resizeMode={FastImage.resizeMode.contain}
+              />
+            </TouchableOpacity>
+          );
+        })}
+      </View>
       <View
         style={{
           flexDirection: 'row',
@@ -105,7 +118,6 @@ export function Profile({navigation}: Props) {
 
 const s = StyleSheet.create({
   listWrapper: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    flexDirection: 'row',
   },
 });
