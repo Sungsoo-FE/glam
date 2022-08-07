@@ -24,6 +24,7 @@ function TabBar() {
         initialRouteName="Home"
         tabBarPosition="top"
         screenOptions={{
+          swipeEnabled: false,
           tabBarActiveTintColor: 'black',
         }}>
         <Tab.Screen
@@ -75,6 +76,7 @@ function BottomTabBar() {
         initialRouteName="Home"
         tabBarPosition="bottom"
         screenOptions={{
+          swipeEnabled: false,
           tabBarActiveTintColor: 'black',
         }}>
         <Tab.Screen
